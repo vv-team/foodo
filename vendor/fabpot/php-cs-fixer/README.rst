@@ -284,6 +284,16 @@ Choose from the list of available fixers:
                         visibility; static MUST be
                         declared after the visibility.
 
+* **array_element_no_space_before_comma** [symfony]
+                        In array declaration, there
+                        MUST NOT be a whitespace
+                        before each comma.
+
+* **array_element_white_space_after_comma** [symfony]
+                        In array declaration, there
+                        MUST be a whitespace after
+                        each comma.
+
 * **blankline_after_open_tag** [symfony]
                         Ensure there is no code on the
                         same line as the PHP open tag
@@ -296,7 +306,7 @@ Choose from the list of available fixers:
 
 * **double_arrow_multiline_whitespaces** [symfony]
                         Operator => should not be
-                        arounded by multi-line
+                        surrounded by multi-line
                         whitespaces.
 
 * **duplicate_semicolon** [symfony]
@@ -309,6 +319,11 @@ Choose from the list of available fixers:
 
 * **extra_empty_lines** [symfony]
                         Removes extra empty lines.
+
+* **function_typehint_space** [symfony]
+                        Add missing space between
+                        function's argument and its
+                        typehint.
 
 * **include** [symfony]
                         Include and file path should
@@ -354,7 +369,7 @@ Choose from the list of available fixers:
 
 * **operators_spaces** [symfony]
                         Binary operators should be
-                        arounded by at least one
+                        surrounded by at least one
                         space.
 
 * **phpdoc_indent** [symfony]
@@ -422,6 +437,11 @@ Choose from the list of available fixers:
                         @type should always be written
                         as @var.
 
+* **phpdoc_types** [symfony]
+                        The correct case must be used
+                        for standard PHP types in
+                        phpdoc.
+
 * **phpdoc_var_without_name** [symfony]
                         @var and @type annotations
                         should not contain the
@@ -431,6 +451,10 @@ Choose from the list of available fixers:
                         Pre
                         incrementation/decrementation
                         should be used if possible.
+
+* **print_to_echo** [symfony]
+                        Converts print language
+                        construct to echo if possible.
 
 * **remove_leading_slash_use** [symfony]
                         Remove leading slashes in use
@@ -448,6 +472,11 @@ Choose from the list of available fixers:
                         Inside a classy element "self"
                         should be preferred to the
                         class name itself.
+
+* **short_bool_cast** [symfony]
+                        Short cast bool using double
+                        exclamation mark should not be
+                        used.
 
 * **single_array_no_trailing_comma** [symfony]
                         PHP single-line arrays should
@@ -496,6 +525,10 @@ Choose from the list of available fixers:
                         placed adjacent to their
                         operands.
 
+* **unneeded_control_parentheses** [symfony]
+                        Removes unneeded parentheses
+                        around control statements.
+
 * **unused_use** [symfony]
                         Unused use statements must be
                         removed.
@@ -516,6 +549,11 @@ Choose from the list of available fixers:
                         Concatenation should be used
                         with at least one whitespace
                         around.
+
+* **echo_to_print** [contrib]
+                        Converts echo language
+                        construct to print if
+                        possible.
 
 * **ereg_to_preg** [contrib]
                         Replace deprecated ereg

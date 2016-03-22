@@ -23,33 +23,47 @@ class PhpUnitConstructFixerTest extends AbstractFixerTestBase
      */
     public function testFix($expected, $input = null)
     {
-        $this->makeTest($expected, $input);
+        $fixer = $this->getFixer();
+
+        $fixer->configure(array(
+            'assertEquals' => true,
+            'assertSame' => true,
+            'assertNotEquals' => true,
+            'assertNotSame' => true,
+        ));
+        $this->makeTest($expected, $input, null, $fixer);
+
+        $fixer->configure(array(
+            'assertEquals' => false,
+            'assertSame' => false,
+            'assertNotEquals' => false,
+            'assertNotSame' => false,
+        ));
+        $this->makeTest($input ?: $expected, null, null, $fixer);
+
+        foreach (array('assertSame', 'assertEquals', 'assertNotEquals', 'assertNotSame') as $method) {
+            $config = array(
+                'assertEquals' => false,
+                'assertSame' => false,
+                'assertNotEquals' => false,
+                'assertNotSame' => false,
+            );
+            $config[$method] = true;
+
+            $fixer->configure($config);
+            $this->makeTest(
+                $expected,
+                $input && false !== strpos($input, $method) ? $input : null,
+                null,
+                $fixer
+            );
+        }
     }
 
     public function provideTestFixCases()
     {
-        return array(
+        $cases = array(
             array('<?php $sth->assertSame(true, $foo);'),
-            array(
-                '<?php $this->assertTrue($a);',
-                '<?php $this->assertSame(true, $a);',
-            ),
-            array(
-                '<?php $this->assertTrue($a  , "true" . $bar);',
-                '<?php $this->assertSame(true  , $a  , "true" . $bar);',
-            ),
-            array(
-                '<?php $this->assertFalse(  $a, "false" . $bar);',
-                '<?php $this->assertSame(  false, $a, "false" . $bar);',
-            ),
-            array(
-                '<?php $this->assertNull(  $a  , "null" . $bar);',
-                '<?php $this->assertSame(  null, $a  , "null" . $bar);',
-            ),
-            array(
-                '<?php $this->assertNotNull(  $a  , "notNull" . $bar);',
-                '<?php $this->assertNotSame(  null, $a  , "notNull" . $bar);',
-            ),
             array(
                 '<?php
     $this->assertTrue(
@@ -74,5 +88,27 @@ class PhpUnitConstructFixerTest extends AbstractFixerTestBase
                 '<?php $this->assertSame(null /*comment*/ === $eventException ? $exception : $eventException, $event->getException());',
             ),
         );
+
+        return array_merge(
+            $cases,
+            $this->generateCases('<?php $this->assert%s%s($a); //%s %s', '<?php $this->assert%s(%s, $a); //%s %s'),
+            $this->generateCases('<?php $this->assert%s%s($a, "%s", "%s");', '<?php $this->assert%s(%s, $a, "%s", "%s");')
+        );
+    }
+
+    private function generateCases($expectedTemplate, $inputTemplate)
+    {
+        $cases = array();
+        $functionTypes = array('Same' => true, 'NotSame' => false, 'Equals' => true, 'NotEquals' => false);
+        foreach (array('true', 'false', 'null') as $type) {
+            foreach ($functionTypes as $method => $positive) {
+                $cases[] = array(
+                    sprintf($expectedTemplate, $positive ? '' : 'Not', ucfirst($type), $method, $type),
+                    sprintf($inputTemplate, $method, $type, $method, $type),
+                );
+            }
+        }
+
+        return $cases;
     }
 }

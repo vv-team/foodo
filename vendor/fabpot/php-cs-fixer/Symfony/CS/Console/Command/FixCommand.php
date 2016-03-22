@@ -15,6 +15,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Filesystem;
@@ -339,6 +340,11 @@ EOF
             $config->setDir($path);
         }
 
+        if ($output instanceof ConsoleOutputInterface && extension_loaded('xdebug')) {
+            $stdErr = $output->getErrorOutput();
+            $stdErr->writeln(sprintf($stdErr->isDecorated() ? '<bg=yellow;fg=black;>%s</>' : '%s', 'You are running php-cs-fixer with xdebug enabled. This has a major impact on runtime performance.'));
+        }
+
         $verbosity = $output->getVerbosity();
 
         // register custom fixers from config
@@ -422,7 +428,7 @@ EOF
                 }
 
                 $fixEvent = $this->stopwatch->getEvent('fixFiles');
-                $output->writeln(sprintf('Fixed all files in %.3f seconds, %.3f MB memory used', $fixEvent->getDuration() / 1000, $fixEvent->getMemory() / 1024 / 1024));
+                $output->writeln(sprintf('%s all files in %.3f seconds, %.3f MB memory used', $input->getOption('dry-run') ? 'Checked' : 'Fixed', $fixEvent->getDuration() / 1000, $fixEvent->getMemory() / 1024 / 1024));
                 break;
             case 'xml':
                 $dom = new \DOMDocument('1.0', 'UTF-8');

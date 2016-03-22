@@ -21,10 +21,14 @@ use Symfony\CS\Tokenizer\Tokens;
  */
 class TokensTest extends \PHPUnit_Framework_TestCase
 {
-    private function assertEqualsTokensArray($expected, $input)
+    /**
+     * @param Token[]|null $expected
+     * @param Token[]|null $input
+     */
+    private function assertEqualsTokensArray(array $expected = null, array $input = null)
     {
         if (null === $expected) {
-            $this->assertSame($expected, $input);
+            $this->assertNull($input);
 
             return;
         }
@@ -58,6 +62,11 @@ class Foo
     }
     public function bar5($data)
     {
+        $message = $data;
+        $example = function ($arg) use ($message) {
+            echo $arg . ' ' . $message;
+        };
+        $example('hello');
     }
 }
 PHP;
@@ -801,7 +810,7 @@ PHP;
         $this->assertSame($barIndex, reset($newPublicIndexes));
 
         for ($i = $fooIndex; $i < $barIndex; ++$i) {
-            $this->assertTrue($tokens[$i]->isWhiteSpace());
+            $this->assertTrue($tokens[$i]->isWhitespace());
         }
     }
 
@@ -1012,6 +1021,8 @@ PHP;
         $cases = array(
             array('<?php $a;', 1),
             array("<?php\n \$a = (0+1); // [0,1]", 4),
+            array('<?php $text = "foo $bbb[0] bar";', 8),
+            array('<?php $text = "foo ${aaa[123]} bar";', 9),
         );
 
         return $cases;

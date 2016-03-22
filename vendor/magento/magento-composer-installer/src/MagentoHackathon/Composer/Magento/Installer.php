@@ -608,7 +608,13 @@ class Installer extends LibraryInstaller implements InstallerInterface
         if ($this->hasExtraMap($initial)) {
             $initialStrategy = $this->getDeployStrategy($initial);
             $initialStrategy->setMappings($this->getParser($initial)->getMappings());
-            $initialStrategy->clean();
+            try {
+                $initialStrategy->clean();
+            } catch (\ErrorException $e) {
+                if ($this->io->isDebug()) {
+                    $this->io->write($e->getMessage());
+                }
+            }
         }
 
         parent::update($repo, $initial, $target);
@@ -715,7 +721,13 @@ class Installer extends LibraryInstaller implements InstallerInterface
 
         $strategy = $this->getDeployStrategy($package);
         $strategy->setMappings($this->getParser($package)->getMappings());
-        $strategy->clean();
+        try {
+            $strategy->clean();
+        } catch (\ErrorException $e) {
+            if ($this->io->isDebug()) {
+                $this->io->write($e->getMessage());
+            }
+        }
 
         parent::uninstall($repo, $package);
     }

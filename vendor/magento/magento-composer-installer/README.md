@@ -164,3 +164,6 @@ You must run `composer install` to install dependencies for a new application or
 The Magneto Composer Installer uses the `copy` deployment strategy. It copies each file or directory from the `vendor` directory to its designated location based on the `extra/map` section in the component's `composer.json`.
 
 There are [other deployment strategies](https://github.com/magento/magento-composer-installer/blob/master/doc/Deploy.md) that could be used; however, we don't guarantee that any of them will work.
+
+# Notes
+- The extra->magento-root-dir option is no longer supported. It displays only to preseve backward compatibility.
