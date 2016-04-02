@@ -1,0 +1,1 @@
+<h1> New source from Magento </h1>
